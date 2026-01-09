@@ -4,7 +4,7 @@
 #
 # Prerequisites:
 # - Linear MCP must be configured (https://linear.app/docs/mcp)
-# - amp CLI must be installed
+# - Claude Code CLI must be installed
 #
 # On first run, Ralph will prompt you to select or create a Linear project.
 
@@ -23,8 +23,8 @@ if [ ! -f "$PROJECT_FILE" ]; then
   echo "No Linear project configured. Starting interactive setup..."
   echo ""
 
-  # Run amp with setup prompt to create .ralph-project
-  cat "$SCRIPT_DIR/setup-prompt.md" | amp --dangerously-allow-all
+  # Run Claude Code with setup prompt to create .ralph-project
+  cat "$SCRIPT_DIR/setup-prompt.md" | claude --dangerously-skip-permissions -p
 
   # Verify .ralph-project was created
   if [ ! -f "$PROJECT_FILE" ]; then
@@ -58,8 +58,8 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "  Ralph Iteration $i of $MAX_ITERATIONS"
   echo "═══════════════════════════════════════════════════════"
 
-  # Run amp with the ralph prompt
-  OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
+  # Run Claude Code with the ralph prompt
+  OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | claude --dangerously-skip-permissions -p 2>&1 | tee /dev/stderr) || true
 
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then

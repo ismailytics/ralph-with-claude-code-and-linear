@@ -15,7 +15,7 @@ You are an autonomous coding agent working on a software project with Linear MCP
 7. Mark the issue as "In Progress" using `mcp__linear-server__update_issue`
 8. Implement that single user story
 9. Run quality checks (e.g., typecheck, lint, test - use whatever your project requires)
-10. Update AGENTS.md files if you discover reusable patterns (see below)
+10. Update CLAUDE.md files if you discover reusable patterns (see below)
 11. If checks pass, commit ALL changes with message: `feat: [Issue Identifier] - [Issue Title]`
 12. Update the Linear issue to "Done" status using `mcp__linear-server__update_issue`
 13. Add a comment to the issue documenting what was implemented and learnings
@@ -53,8 +53,6 @@ After completing a story, add a comment to the Linear issue using `mcp__linear-s
 ```markdown
 ## Implementation Complete
 
-**Thread:** https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
-
 ### What was implemented
 - [List of changes]
 
@@ -68,16 +66,14 @@ After completing a story, add a comment to the Linear issue using `mcp__linear-s
 - Useful context: [description]
 ```
 
-Include the thread URL so future iterations can use the `read_thread` tool to reference previous work if needed.
-
 The learnings section is critical - it helps future iterations avoid repeating mistakes and understand the codebase better.
 
-## Update AGENTS.md Files
+## Update CLAUDE.md Files
 
-Before committing, check if any edited files have learnings worth preserving in nearby AGENTS.md files:
+Before committing, check if any edited files have learnings worth preserving in nearby CLAUDE.md files:
 
 1. **Identify directories with edited files** - Look at which directories you modified
-2. **Check for existing AGENTS.md** - Look for AGENTS.md in those directories or parent directories
+2. **Check for existing CLAUDE.md** - Look for CLAUDE.md in those directories or parent directories
 3. **Add valuable learnings** - If you discovered something future developers/agents should know:
    - API patterns or conventions specific to that module
    - Gotchas or non-obvious requirements
@@ -85,7 +81,7 @@ Before committing, check if any edited files have learnings worth preserving in 
    - Testing approaches for that area
    - Configuration or environment requirements
 
-**Examples of good AGENTS.md additions:**
+**Examples of good CLAUDE.md additions:**
 - "When modifying X, also update Y to keep them in sync"
 - "This module uses pattern Z for all API calls"
 - "Tests require the dev server running on PORT 3000"
@@ -96,7 +92,7 @@ Before committing, check if any edited files have learnings worth preserving in 
 - Temporary debugging notes
 - Information that belongs in Linear issue comments
 
-Only update AGENTS.md if you have **genuinely reusable knowledge** that would help future work in that directory.
+Only update CLAUDE.md if you have **genuinely reusable knowledge** that would help future work in that directory.
 
 ## Quality Requirements
 

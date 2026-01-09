@@ -1,8 +1,8 @@
 # Ralph Advanced with Linear and Playwright
 
-![Ralph](ralph.webp)
+![Ralph](ralph-computer.avif)
 
-Ralph is an autonomous AI agent loop that runs [Amp](https://ampcode.com) repeatedly until all PRD items are complete. Each iteration is a fresh Amp instance with clean context. Memory persists via git history and Linear (projects, issues, and comments).
+Ralph is an autonomous AI agent loop that runs [Claude Code](https://docs.anthropic.com/claude-code) repeatedly until all PRD items are complete. Each iteration is a fresh Claude Code instance with clean context. Memory persists via git history and Linear (projects, issues, and comments).
 
 Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 
@@ -14,7 +14,7 @@ Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 
 ## Prerequisites
 
-- [Amp CLI](https://ampcode.com) installed and authenticated
+- [Claude Code CLI](https://docs.anthropic.com/claude-code) installed and authenticated
 - [Linear MCP](https://linear.app/docs/mcp) configured in your MCP settings
 - `jq` installed (`brew install jq` on macOS)
 - A git repository for your project
@@ -38,24 +38,14 @@ chmod +x scripts/ralph/ralph.sh
 
 ### 3. Install skills globally (optional)
 
-Copy the skills to your Amp config for use across all projects:
+Copy the skills to your Claude Code config for use across all projects:
 
 ```bash
-cp -r skills/prd ~/.config/amp/skills/
-cp -r skills/ralph ~/.config/amp/skills/
+cp -r skills/prd ~/.claude/skills/
+cp -r skills/ralph ~/.claude/skills/
 ```
 
-### 4. Configure Amp auto-handoff (recommended)
-
-Add to `~/.config/amp/settings.json`:
-
-```json
-{
-  "amp.experimental.autoHandoff": { "context": 90 }
-}
-```
-
-This enables automatic handoff when context fills up, allowing Ralph to handle large stories that exceed a single context window.
+Claude Code automatically compacts context when it fills up, so no additional configuration is needed.
 
 ## Workflow
 
@@ -107,8 +97,8 @@ Ralph will:
 
 | File | Purpose |
 |------|---------|
-| `ralph.sh` | The bash loop that spawns fresh Amp instances |
-| `prompt.md` | Instructions given to each Amp instance |
+| `ralph.sh` | The bash loop that spawns fresh Claude Code instances |
+| `prompt.md` | Instructions given to each Claude Code instance |
 | `setup-prompt.md` | Interactive setup for Linear project selection |
 | `.ralph-project` | Local config with Linear project ID (gitignored) |
 | `skills/prd/` | Skill for generating PRDs in Linear |
@@ -147,8 +137,6 @@ After completing a story, Ralph adds a comment to the Linear issue:
 ```markdown
 ## Implementation Complete
 
-**Thread:** https://ampcode.com/threads/...
-
 ### What was implemented
 - Added new component
 - Updated database schema
@@ -182,10 +170,10 @@ npm run dev
 
 ### Each Iteration = Fresh Context
 
-Each iteration spawns a **new Amp instance** with clean context. The only memory between iterations is:
+Each iteration spawns a **new Claude Code instance** with clean context. The only memory between iterations is:
 - Git history (commits from previous iterations)
 - Linear issues and comments (status and learnings)
-- AGENTS.md files (reusable patterns)
+- CLAUDE.md files (reusable patterns)
 
 ### Small Tasks
 
@@ -202,11 +190,11 @@ Too big (split these):
 - "Add authentication"
 - "Refactor the API"
 
-### AGENTS.md Updates Are Critical
+### CLAUDE.md Updates Are Critical
 
-After each iteration, Ralph updates the relevant `AGENTS.md` files with learnings. This is key because Amp automatically reads these files, so future iterations (and future human developers) benefit from discovered patterns, gotchas, and conventions.
+After each iteration, Ralph updates the relevant `CLAUDE.md` files with learnings. This is key because Claude Code automatically reads these files, so future iterations (and future human developers) benefit from discovered patterns, gotchas, and conventions.
 
-Examples of what to add to AGENTS.md:
+Examples of what to add to CLAUDE.md:
 - Patterns discovered ("this codebase uses X for Y")
 - Gotchas ("do not forget to update Z when changing W")
 - Useful context ("the settings panel is in component X")
@@ -288,5 +276,5 @@ Previous work remains in Linear for reference.
 ## References
 
 - [Geoffrey Huntley's Ralph article](https://ghuntley.com/ralph/)
-- [Amp documentation](https://ampcode.com/manual)
+- [Claude Code documentation](https://docs.anthropic.com/claude-code)
 - [Linear MCP documentation](https://linear.app/docs/mcp)
