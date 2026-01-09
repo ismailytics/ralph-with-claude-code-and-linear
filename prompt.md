@@ -11,7 +11,7 @@ You are an autonomous coding agent working on a software project with Linear MCP
 3. Extract the branch name from the project description (line starting with `Branch: `)
 4. Check you're on the correct branch. If not, check it out or create from main.
 5. Read previous learnings from completed issues (see "Reading Previous Learnings" below)
-6. Pick the **highest priority** issue that is in "Todo" status
+6. Pick the **highest priority** issue that is in "Todo" status (see "Choosing the Next Issue" below)
 7. Mark the issue as "In Progress" using `mcp__linear-server__update_issue`
 8. Implement that single user story
 9. Run quality checks (e.g., typecheck, lint, test - use whatever your project requires)
@@ -34,6 +34,18 @@ As a [user], I want [feature] so that [benefit].
 ```
 
 Parse the acceptance criteria from the description to know what to verify.
+
+## Choosing the Next Issue
+
+When multiple issues have the same priority, prefer in this order:
+
+1. **Architectural decisions** - Core abstractions that other code depends on
+2. **Integration points** - Where modules connect (reveals incompatibilities early)
+3. **Unknown unknowns** - Spike work, things you're unsure about
+4. **Standard features** - Normal implementation work
+5. **Polish and cleanup** - Quick wins, can be done anytime
+
+Fail fast on risky work. Save easy wins for later.
 
 ## Reading Previous Learnings
 
@@ -96,8 +108,16 @@ Only update CLAUDE.md if you have **genuinely reusable knowledge** that would he
 
 ## Quality Requirements
 
-- ALL commits must pass your project's quality checks (typecheck, lint, test)
-- Do NOT commit broken code
+Before committing, run ALL feedback loops IN ORDER:
+
+1. **TypeScript/Type check**: Run project's typecheck command (MUST pass with 0 errors)
+2. **Tests**: Run project's test command (MUST pass)
+3. **Lint**: Run project's lint command (MUST pass)
+
+**CRITICAL:** Do NOT commit if ANY feedback loop fails. Fix issues first, then retry.
+If a feedback loop keeps failing after 3 attempts, mark the issue as blocked in Linear and move on.
+
+Additional requirements:
 - Keep changes focused and minimal
 - Follow existing code patterns
 

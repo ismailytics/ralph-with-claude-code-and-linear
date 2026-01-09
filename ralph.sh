@@ -7,8 +7,34 @@
 # - Claude Code CLI must be installed
 #
 # On first run, Ralph will prompt you to select or create a Linear project.
+#
+# Security: When not running in a container, Ralph will use Docker sandbox
+# if available for isolation during AFK mode.
 
 set -e
+
+# Function to run Claude with optional Docker sandbox
+run_claude() {
+  local prompt_file="$1"
+
+  # Check if already running in a container
+  if [ -f /.dockerenv ]; then
+    # Already in container - run directly
+    cat "$prompt_file" | claude --dangerously-skip-permissions -p
+  else
+    # Not in container - use Docker sandbox if available
+    if command -v docker &> /dev/null && docker info &> /dev/null 2>&1; then
+      cat "$prompt_file" | docker sandbox run claude --dangerously-skip-permissions -p
+    else
+      # Docker not available - run directly (with warning on first run)
+      if [ -z "$DOCKER_WARNING_SHOWN" ]; then
+        echo "Note: Running without Docker sandbox. Consider using Docker for AFK safety."
+        export DOCKER_WARNING_SHOWN=1
+      fi
+      cat "$prompt_file" | claude --dangerously-skip-permissions -p
+    fi
+  fi
+}
 
 MAX_ITERATIONS=${1:-10}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,7 +50,7 @@ if [ ! -f "$PROJECT_FILE" ]; then
   echo ""
 
   # Run Claude Code with setup prompt to create .ralph-project
-  cat "$SCRIPT_DIR/setup-prompt.md" | claude --dangerously-skip-permissions -p
+  run_claude "$SCRIPT_DIR/setup-prompt.md"
 
   # Verify .ralph-project was created
   if [ ! -f "$PROJECT_FILE" ]; then
@@ -59,7 +85,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "═══════════════════════════════════════════════════════"
 
   # Run Claude Code with the ralph prompt
-  OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | claude --dangerously-skip-permissions -p 2>&1 | tee /dev/stderr) || true
+  OUTPUT=$(run_claude "$SCRIPT_DIR/prompt.md" 2>&1 | tee /dev/stderr) || true
 
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then

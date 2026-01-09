@@ -74,21 +74,36 @@ This creates a Linear project and issues from your markdown PRD.
 
 ### 3. Run Ralph
 
+There are two modes for running Ralph:
+
+| Mode | Script | Best For |
+|------|--------|----------|
+| **HITL** (human-in-the-loop) | `ralph-once.sh` | Learning, prompt refinement, watching Ralph work |
+| **AFK** (away from keyboard) | `ralph.sh` | Bulk work, low-risk tasks, overnight runs |
+
+**HITL Mode** - Single iteration, you watch and intervene:
 ```bash
-./scripts/ralph/ralph.sh [max_iterations]
+./scripts/ralph/ralph-once.sh
 ```
 
-Default is 10 iterations.
+**AFK Mode** - Multiple iterations, runs autonomously:
+```bash
+./scripts/ralph/ralph.sh [max_iterations]  # Default: 10
+```
+
+Start with HITL to learn and refine your prompt. Go AFK once you trust it.
 
 On first run, if `.ralph-project` doesn't exist, Ralph will interactively prompt you to select or create a Linear project.
+
+**Security Note:** When not running inside a Docker container, `ralph.sh` will automatically use Docker sandbox if available for isolation during AFK mode.
 
 Ralph will:
 1. Create a feature branch (from project description)
 2. Pick the highest priority issue with "Todo" status
 3. Mark it as "In Progress"
 4. Implement that single story
-5. Run quality checks (typecheck, tests)
-6. Commit if checks pass
+5. Run quality checks (typecheck, tests, lint)
+6. Commit if ALL checks pass
 7. Mark issue as "Done"
 8. Add a comment with implementation details and learnings
 9. Repeat until all issues are done or max iterations reached
@@ -97,7 +112,8 @@ Ralph will:
 
 | File | Purpose |
 |------|---------|
-| `ralph.sh` | The bash loop that spawns fresh Claude Code instances |
+| `ralph.sh` | AFK mode - loops through iterations autonomously |
+| `ralph-once.sh` | HITL mode - single iteration for learning/refinement |
 | `prompt.md` | Instructions given to each Claude Code instance |
 | `setup-prompt.md` | Interactive setup for Linear project selection |
 | `.ralph-project` | Local config with Linear project ID (gitignored) |
