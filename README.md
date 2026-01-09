@@ -21,11 +21,15 @@ Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 
 ## Quick Start
 
+**Important:** Run `ralph.sh` directly in your terminal, not inside Claude Code.
+
 ```bash
 git clone https://github.com/ismailytics/ralph-with-linear.git
 cd ralph-with-linear
 ./ralph.sh
 ```
+
+On first run, Ralph opens an interactive Claude Code session for setup (select/create Linear project). After setup completes, exit the Claude Code session, then run `./ralph.sh` again in your terminal to start the autonomous loop.
 
 ## How Ralph Works
 
@@ -97,6 +101,12 @@ This creates a Linear project and issues from your markdown PRD.
 
 ### 3. Run Ralph
 
+**Important:** Always run Ralph in your terminal, not inside Claude Code. Ralph spawns new Claude Code instances, which doesn't work when nested inside an existing session.
+
+On first run, if `.ralph-project` doesn't exist, Ralph opens an interactive Claude Code session for setup. After completing setup:
+1. Exit the Claude Code session
+2. Run `./ralph.sh` again in your terminal
+
 There are two modes for running Ralph:
 
 | Mode | Script | Best For |
@@ -115,8 +125,6 @@ There are two modes for running Ralph:
 ```
 
 Start with HITL to learn and refine your prompt. Go AFK once you trust it.
-
-On first run, if `.ralph-project` doesn't exist, Ralph will interactively prompt you to select or create a Linear project.
 
 Ralph will:
 1. Create a feature branch (from project description)

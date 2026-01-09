@@ -11,8 +11,10 @@ Ralph is an autonomous AI agent loop that runs Claude Code repeatedly until all 
 
 ## Commands
 
+**Important:** Run `ralph.sh` directly in your terminal, not inside Claude Code. Ralph spawns new Claude Code instances, which doesn't work when nested inside an existing session.
+
 ```bash
-# Run Ralph (interactive project selection on first run)
+# In your terminal (not in Claude Code)
 ./ralph.sh [max_iterations]
 
 # Run the flowchart dev server
