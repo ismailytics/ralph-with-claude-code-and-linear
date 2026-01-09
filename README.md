@@ -17,6 +17,25 @@ Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 - [Claude Code CLI](https://docs.anthropic.com/claude-code) installed and authenticated
 - [Linear MCP](https://linear.app/docs/mcp) configured in your MCP settings
 - A git repository for your project
+- `jq` installed (for JSON parsing in scripts)
+
+## Quick Start
+
+```bash
+git clone https://github.com/ismailytics/ralph-with-linear.git
+cd ralph-with-linear
+./ralph.sh
+```
+
+## How Ralph Works
+
+Ralph runs **inside your existing project**, not in a separate folder. When you run `./ralph.sh`:
+
+1. Creates a feature branch (e.g., `ralph/task-priority`)
+2. Implements changes directly in your codebase
+3. Commits to your git repository
+
+Ralph files (`ralph.sh`, `prompt.md`, etc.) live alongside your project code. The only Ralph-specific file is `.ralph-project`, which stores the Linear project configuration and is gitignored.
 
 ## Setup
 
@@ -24,29 +43,30 @@ Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 
 Follow the [Linear MCP documentation](https://linear.app/docs/mcp) to set up the Linear MCP server. This enables Ralph to read and write Linear projects and issues.
 
-### 2. Copy Ralph to your project
+### 2. Copy Ralph to Your Project (Optional)
+
+If you want to use Ralph in an existing project, copy these files to your project root:
 
 ```bash
 # From your project root
-mkdir -p scripts/ralph
-cp /path/to/ralph/ralph.sh scripts/ralph/
-cp /path/to/ralph/prompt.md scripts/ralph/
-cp /path/to/ralph/setup-prompt.md scripts/ralph/
-chmod +x scripts/ralph/ralph.sh
+cp /path/to/ralph-with-linear/ralph.sh .
+cp /path/to/ralph-with-linear/ralph-once.sh .
+cp /path/to/ralph-with-linear/prompt.md .
+cp /path/to/ralph-with-linear/setup-prompt.md .
+chmod +x ralph.sh ralph-once.sh
 ```
 
-### 3. Install skills (included in `.claude/skills/`)
+### 3. Install Skills
 
-Skills are already included in this repo at `.claude/skills/`. Claude Code automatically discovers them.
+Skills are included in `.claude/skills/`. Claude Code automatically discovers them when you run from this directory.
 
 To install globally for use across all projects:
 
 ```bash
+mkdir -p ~/.claude/skills
 cp -r .claude/skills/prd ~/.claude/skills/
 cp -r .claude/skills/ralph ~/.claude/skills/
 ```
-
-Claude Code automatically compacts context when it fills up, so no additional configuration is needed.
 
 ## Workflow
 
@@ -65,7 +85,7 @@ Answer the clarifying questions. The skill will:
 - Create Linear issues for each user story
 - Save `.ralph-project` with the project configuration
 
-### 2. Or convert an existing PRD
+### 2. Or Convert an Existing PRD
 
 If you have an existing markdown PRD, use the `/ralph` skill to convert it:
 
@@ -86,19 +106,17 @@ There are two modes for running Ralph:
 
 **HITL Mode** - Single iteration, you watch and intervene:
 ```bash
-./scripts/ralph/ralph-once.sh
+./ralph-once.sh
 ```
 
 **AFK Mode** - Multiple iterations, runs autonomously:
 ```bash
-./scripts/ralph/ralph.sh [max_iterations]  # Default: 10
+./ralph.sh [max_iterations]  # Default: 10
 ```
 
 Start with HITL to learn and refine your prompt. Go AFK once you trust it.
 
 On first run, if `.ralph-project` doesn't exist, Ralph will interactively prompt you to select or create a Linear project.
-
-**Security Note:** When not running inside a Docker container, `ralph.sh` will automatically use Docker sandbox if available for isolation during AFK mode.
 
 Ralph will:
 1. Create a feature branch (from project description)
