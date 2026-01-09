@@ -49,6 +49,18 @@ function toggleTask(id) {
     }
 }
 
+// Delete a task
+function deleteTask(id) {
+    // Remove from array
+    tasks = tasks.filter(t => t.id !== id);
+
+    // Remove from DOM
+    const li = document.querySelector(`li[data-id="${id}"]`);
+    if (li) {
+        li.remove();
+    }
+}
+
 // Render a single task to the DOM
 function renderTask(task) {
     const li = document.createElement('li');
@@ -74,6 +86,11 @@ function renderTask(task) {
     deleteBtn.className = 'delete-btn';
     deleteBtn.textContent = '×';
     deleteBtn.type = 'button';
+
+    // Click on delete button to remove task
+    deleteBtn.addEventListener('click', function() {
+        deleteTask(task.id);
+    });
 
     li.appendChild(taskText);
     li.appendChild(deleteBtn);
