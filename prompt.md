@@ -20,6 +20,43 @@ You are an autonomous coding agent working on a software project with Linear MCP
 12. Update the Linear issue to "Done" status using `mcp__linear-server__update_issue`
 13. Add a comment to the issue documenting what was implemented and learnings
 
+## Progress Output (MANDATORY)
+
+**CRITICAL:** You MUST output a progress marker line BEFORE every action. This is required for terminal visibility.
+
+Output format - one line per action:
+```
+═══ [INIT] Reading .ralph-project...
+═══ [LINEAR] Fetching project: <project-name>
+═══ [LINEAR] Found 5 issues (3 Todo, 1 In Progress, 1 Done)
+═══ [LEARN] Reading learnings from 2 completed issues...
+═══ [PICK] Next issue: DEV-123 - Create login form (Priority: High)
+═══ [START] Marking DEV-123 as "In Progress"
+═══ [IMPL] Editing: src/components/Login.tsx
+═══ [IMPL] Editing: src/styles/login.css
+═══ [CHECK] Running typecheck...
+═══ [CHECK] Running tests...
+═══ [CHECK] Running lint...
+═══ [COMMIT] feat: DEV-123 - Create login form
+═══ [DONE] Marking DEV-123 as "Done"
+═══ [COMMENT] Adding learnings to DEV-123
+```
+
+**Required markers (output BEFORE each action):**
+- `[INIT]` - Before reading configuration
+- `[LINEAR]` - Before/after every Linear API call
+- `[LEARN]` - Before reading learnings
+- `[PICK]` - When selecting the next issue
+- `[START]` - Before marking issue as In Progress
+- `[IMPL]` - Before EACH file edit (one marker per file)
+- `[CHECK]` - Before EACH quality check command
+- `[COMMIT]` - Before git commit
+- `[DONE]` - Before marking issue as Done
+- `[COMMENT]` - Before adding Linear comment
+- `[ERROR]` - When something fails
+
+**Do NOT** summarize at the end. Output markers in real-time as you work.
+
 ## Reading User Stories from Linear
 
 The issue description contains the user story and acceptance criteria in this format:
