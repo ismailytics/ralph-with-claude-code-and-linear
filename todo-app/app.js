@@ -1,7 +1,28 @@
 // Todo App - Main JavaScript
 
+// Storage key for localStorage
+const STORAGE_KEY = 'todos';
+
 // In-memory storage for tasks
 let tasks = [];
+
+// Save tasks to localStorage
+function saveTasks() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+// Load tasks from localStorage
+function loadTasks() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+        try {
+            tasks = JSON.parse(stored);
+        } catch (e) {
+            // If JSON parsing fails, start with empty array
+            tasks = [];
+        }
+    }
+}
 
 // DOM elements
 const taskInput = document.getElementById('task-input');
@@ -27,6 +48,9 @@ function addTask() {
     // Add to array
     tasks.push(task);
 
+    // Save to localStorage
+    saveTasks();
+
     // Render the task
     renderTask(task);
 
@@ -41,6 +65,9 @@ function toggleTask(id) {
     if (task) {
         task.completed = !task.completed;
 
+        // Save to localStorage
+        saveTasks();
+
         // Update DOM
         const li = document.querySelector(`li[data-id="${id}"]`);
         if (li) {
@@ -53,6 +80,9 @@ function toggleTask(id) {
 function deleteTask(id) {
     // Remove from array
     tasks = tasks.filter(t => t.id !== id);
+
+    // Save to localStorage
+    saveTasks();
 
     // Remove from DOM
     const li = document.querySelector(`li[data-id="${id}"]`);
@@ -97,6 +127,15 @@ function renderTask(task) {
     taskList.appendChild(li);
 }
 
+// Initialize the app
+function init() {
+    // Load tasks from localStorage
+    loadTasks();
+
+    // Render all loaded tasks
+    tasks.forEach(task => renderTask(task));
+}
+
 // Event listeners
 addBtn.addEventListener('click', addTask);
 
@@ -106,3 +145,6 @@ taskInput.addEventListener('keypress', function(e) {
         addTask();
     }
 });
+
+// Initialize on page load
+init();
